@@ -16,9 +16,9 @@ This means, in which direction it's contents should align.
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:orientation="vertical"
     android:id="@+id/main_layout"
-    android:weightSum="1"
-    android:orientation="vertical">
+    android:weightSum="1">
 
 
     <!--
@@ -46,15 +46,16 @@ This means, in which direction it's contents should align.
     so it's best to be completely unique when possible).
     -->
     <TextView
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="24dp"
         android:id="@+id/question_text_view" />
-        <!--
-        see:
-        https://developer.android.com/guide/topics/resources/more-resources.html#Dimension
-        for padding units
-        -->
+    <!--
+    see:
+    https://developer.android.com/guide/topics/resources/more-resources.html#Dimension
+    for padding units
+    -->
 
     <LinearLayout
         android:orientation="horizontal"
@@ -91,34 +92,35 @@ This means, in which direction it's contents should align.
             android:id="@+id/true_button"
             android:layout_weight="1" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/next_button"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawablePadding="6dp"
-        android:drawableRight="@drawable/arrow_right"
-        android:text="@string/next_button" />
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/back_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawablePadding="6dp"
-        android:drawableRight="@drawable/arrow_left"
-        android:text="Poprzednie" /><![CDATA[
+        <ImageButton
+            android:id="@+id/previous_button"
+            android:text="backward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="6dp"
+            android:src="@drawable/arrow_left" />
 
-
-
-
-
-
-
-    />
+        <ImageButton
+            android:id="@+id/next_button"
+            android:text="forward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="6dp"
+            android:src="@drawable/arrow_right" />
 
 
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="20dp"
+        android:layout_height="47dp"
+        android:padding="24dp"
+        android:id="@+id/apm_version" />
 
 
-
-]]>
 </LinearLayout>
