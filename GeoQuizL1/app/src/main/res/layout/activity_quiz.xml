@@ -16,9 +16,9 @@ This means, in which direction it's contents should align.
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical"
     android:id="@+id/main_layout"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:orientation="vertical">
 
 
     <!--
@@ -91,14 +91,34 @@ This means, in which direction it's contents should align.
             android:id="@+id/true_button"
             android:layout_weight="1" />
     </LinearLayout>
+
     <Button
         android:id="@+id/next_button"
-        android:text="@string/next_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:drawablePadding="6dp"
         android:drawableRight="@drawable/arrow_right"
-        android:drawablePadding="6dp"/>
+        android:text="@string/next_button" />
+
+    <Button
+        android:id="@+id/back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="6dp"
+        android:drawableRight="@drawable/arrow_left"
+        android:text="Poprzednie" /><![CDATA[
 
 
 
+
+
+
+
+    />
+
+
+
+
+
+]]>
 </LinearLayout>

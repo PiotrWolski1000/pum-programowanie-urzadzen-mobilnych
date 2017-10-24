@@ -7,14 +7,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.support.v4.view.GravityCompat;
 
 public class QuizActivity extends AppCompatActivity {
-
 
     private Button mTrueButton;
     private Button mFalseButton;
     private Button mNextButton;
+    private Button mBackButton;
 
     private TextView mQuestionTextView;
 
@@ -39,6 +38,13 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quiz);
 
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
+        mQuestionTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCurrentIndex = (mCurrentIndex + 1) % mQuestionsBank.length;
+                updateQuestion();
+            }
+        });
 
         mTrueButton = (Button) findViewById(R.id.true_button);
         mTrueButton.setOnClickListener(
@@ -67,14 +73,20 @@ public class QuizActivity extends AppCompatActivity {
             }
         });
 
+        mBackButton = (Button) findViewById(R.id.back_button);
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCurrentIndex = (mCurrentIndex - 1) % mQuestionsBank.length;
+                updateQuestion();
+            }
+        });
         updateQuestion();
     }
-
     private void updateQuestion() {
         int question = mQuestionsBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
     }
-
     private void checkAnswer(boolean userPressedTrue) {
         boolean answerIsTrue = mQuestionsBank[mCurrentIndex].isAnswerTrue();
 
@@ -85,9 +97,8 @@ public class QuizActivity extends AppCompatActivity {
         } else {
             toastMessageId = R.string.incorrect_toast;
         }
-        Toast g = Toast.makeText(this, toastMessageId, Toast.LENGTH_SHORT);
-        g.setGravity(Gravity.TOP, 0, 0);
-        //Toast.makeText(this, toastMessageId, Toast.LENGTH_SHORT).show();
-        g.show();
+        Toast myToast = Toast.makeText(this, toastMessageId, Toast.LENGTH_SHORT);
+        myToast.setGravity(Gravity.TOP,0,0);
+        myToast.show();
     }
 }
