@@ -2,10 +2,12 @@ package pl.wroc.uni.ift.android.quizactivity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v4.view.GravityCompat;
 
 public class QuizActivity extends AppCompatActivity {
 
@@ -83,7 +85,9 @@ public class QuizActivity extends AppCompatActivity {
         } else {
             toastMessageId = R.string.incorrect_toast;
         }
-
-        Toast.makeText(this, toastMessageId, Toast.LENGTH_SHORT).show();
+        Toast g = Toast.makeText(this, toastMessageId, Toast.LENGTH_SHORT);
+        g.setGravity(Gravity.TOP, 0, 0);
+        //Toast.makeText(this, toastMessageId, Toast.LENGTH_SHORT).show();
+        g.show();
     }
 }
