@@ -13,14 +13,17 @@ public class QuizActivity extends AppCompatActivity {
     private Button mTrueButton;
     private Button mFalseButton;
     private Button mNextButton;
+
     private TextView mQuestionTextView;
-    private int mCurrentIndex = 0;
-    Question[] mQuestionBank = new Question[]{
+
+    private Question[] mQuestionsBank = new Question[]{
             new Question(R.string.question_stolica_polski, true),
             new Question(R.string.question_stolica_dolnego_slaska, false),
             new Question(R.string.question_sniezka, true),
-            new Question(R.string.question_wisla, true)};
+            new Question(R.string.question_wisla, true)
+    };
 
+    private int mCurrentIndex = 0;
 
     //    Bundles are generally used for passing data between various Android activities.
     //    It depends on you what type of values you want to pass, but bundles can hold all
@@ -34,7 +37,6 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quiz);
 
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
-        mQuestionTextView.setText(mQuestionBank[mCurrentIndex].getTextResId());
 
         mTrueButton = (Button) findViewById(R.id.true_button);
         mTrueButton.setOnClickListener(
@@ -47,7 +49,7 @@ public class QuizActivity extends AppCompatActivity {
         );
 
         mFalseButton = (Button) findViewById(R.id.false_button);
-        mFalseButton.setOnClickListener( new View.OnClickListener() {
+        mFalseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkAnswer(false);
@@ -57,29 +59,31 @@ public class QuizActivity extends AppCompatActivity {
         mNextButton = (Button) findViewById(R.id.next_button);
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
+                mCurrentIndex = (mCurrentIndex + 1) % mQuestionsBank.length;
                 updateQuestion();
             }
         });
+
+        updateQuestion();
     }
 
-    protected void updateQuestion (){
-        if (mCurrentIndex <= 3){
-            mCurrentIndex++;
-            mQuestionTextView.setText(mQuestionBank[mCurrentIndex].getTextResId());
-        }
+    private void updateQuestion() {
+        int question = mQuestionsBank[mCurrentIndex].getTextResId();
+        mQuestionTextView.setText(question);
     }
 
-    protected void checkAnswer (boolean userPressedTrue){
-        if (userPressedTrue == mQuestionBank[mCurrentIndex].isAnswerTrue()){
-            Toast.makeText(QuizActivity.this,
-                    R.string.correct_toast,
-                    Toast.LENGTH_LONG).show();
+    private void checkAnswer(boolean userPressedTrue) {
+        boolean answerIsTrue = mQuestionsBank[mCurrentIndex].isAnswerTrue();
+
+        int toastMessageId = 0;
+
+        if (userPressedTrue == answerIsTrue) {
+            toastMessageId = R.string.correct_toast;
+        } else {
+            toastMessageId = R.string.incorrect_toast;
         }
-        else {
-            Toast.makeText(QuizActivity.this,
-                    R.string.incorrect_toast,
-                    Toast.LENGTH_LONG).show();
-        }
+
+        Toast.makeText(this, toastMessageId, Toast.LENGTH_SHORT).show();
     }
 }

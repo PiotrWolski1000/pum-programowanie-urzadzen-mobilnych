@@ -49,8 +49,7 @@ This means, in which direction it's contents should align.
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="24dp"
-        android:id="@+id/question_text_view"
-        android:text="@string/question_stolica_polski"/>
+        android:id="@+id/question_text_view" />
         <!--
         see:
         https://developer.android.com/guide/topics/resources/more-resources.html#Dimension
@@ -92,14 +91,14 @@ This means, in which direction it's contents should align.
             android:id="@+id/true_button"
             android:layout_weight="1" />
     </LinearLayout>
-
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
         android:id="@+id/next_button"
         android:text="@string/next_button"
-        />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableRight="@drawable/arrow_right"
+        android:drawablePadding="6dp"/>
+
 
 
 </LinearLayout>
