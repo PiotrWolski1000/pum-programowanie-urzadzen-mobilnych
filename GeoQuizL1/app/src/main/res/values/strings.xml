@@ -14,4 +14,13 @@
     <string name="correct_toast">Odpowiedź poprawna!</string>
     <string name="incorrect_toast">Odpowiedź błędna!</string>
 
+    <string name="button_show_label">Show</string>
+    <string name="warning_text_view_label">Are you sure, you want to do this?</string>
+    <string name="cheat_button_label">Cheat</string>
+
+    <string name="message_for_cheaters">We know that you\'ve cheated</string>
+
+    <string name="already_answered">Already answered</string>
+    <string name="final_notification">Punkty: </string>
+
 </resources>

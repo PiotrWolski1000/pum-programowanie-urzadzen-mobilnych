@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 xmlns stands for xml name space
 Each declare a different XML namespace (android, app, and tools, respectively)
 If your XML file has one or more attributes prefixed with android:,
@@ -11,13 +10,12 @@ from framework-defined runtime attributes.
 android:gravity is the Inside gravity of that View.
 This means, in which direction it's contents should align.
 -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:id="@+id/main_layout"
     android:weightSum="1">
 
 
@@ -46,11 +44,11 @@ This means, in which direction it's contents should align.
     so it's best to be completely unique when possible).
     -->
     <TextView
-
+        android:id="@+id/question_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="24dp"
-        android:id="@+id/question_text_view" />
+        android:gravity="center"
+        android:padding="24dp" />
     <!--
     see:
     https://developer.android.com/guide/topics/resources/more-resources.html#Dimension
@@ -58,9 +56,9 @@ This means, in which direction it's contents should align.
     -->
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <!--
         LinearLayout also supports assigning a weight to individual children
@@ -80,47 +78,42 @@ This means, in which direction it's contents should align.
         the total remaining space, while the first two share the rest equally.
         -->
         <Button
-            android:text="@string/false_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/false_button"
-            android:layout_weight="1" />
-        <Button
-            android:text="@string/true_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/false_button" />
+
+        <Button
             android:id="@+id/true_button"
-            android:layout_weight="1" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/true_button" />
     </LinearLayout>
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <ImageButton
             android:id="@+id/previous_button"
-            android:text="backward"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="6dp"
-            android:src="@drawable/arrow_left" />
+            android:padding="20dp"
+            android:src="@drawable/arrow_left"/>
 
         <ImageButton
             android:id="@+id/next_button"
-            android:text="forward"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="6dp"
-            android:src="@drawable/arrow_right" />
-
-
+            android:padding="20dp"
+            android:src="@drawable/arrow_right"/>
     </LinearLayout>
 
-    <TextView
-        android:layout_width="20dp"
-        android:layout_height="47dp"
-        android:padding="24dp"
-        android:id="@+id/apm_version" />
-
-
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_cheat"
+        android:text="@string/cheat_button_label"/>
 </LinearLayout>
