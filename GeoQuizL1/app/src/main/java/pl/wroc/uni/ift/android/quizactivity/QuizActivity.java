@@ -38,7 +38,7 @@ public class QuizActivity extends AppCompatActivity {
 //            new Question(R.string.question_wisla, true)
 //    };
 
-    private QuestionBank mQuestionsBank2;
+    private QuestionBank mQuestionsBank =  QuestionBank.getInstance();
 
     private int mCheatCounter = 3;
     private int mCurrentIndex = 0;
@@ -66,8 +66,9 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                boolean currentAnswer = mQuestionsBank[mCurrentIndex].isAnswerTrue();
-                boolean IsCheated =  mQuestionsBank[mCurrentIndex].getWasCheated();
+                //boolean currentAnswer = mQuestionsBank[mCurrentIndex].isAnswerTrue();
+                boolean currentAnswer = mQuestionsBank.getQuestion(mCurrentIndex).isAnswerTrue();
+                boolean IsCheated =  mQuestionsBank.getQuestion(mCurrentIndex).getWasCheated();
                 Intent intent = CheatActivity.newIntent(QuizActivity.this, currentAnswer, IsCheated);
 
                 startActivityForResult(intent, CHEAT_REQEST_CODE);
@@ -144,7 +145,7 @@ public class QuizActivity extends AppCompatActivity {
                             R.string.message_for_cheaters,
                             Toast.LENGTH_LONG)
                             .show();
-                    mQuestionsBank[mCurrentIndex].setWasCheated(true);
+                    mQuestionsBank.getQuestion(mCurrentIndex).setWasCheated(true);
                     mCheatCounter--;
                     checkCheatCounter();
                 }
@@ -163,7 +164,7 @@ public class QuizActivity extends AppCompatActivity {
 
         // because Question is implementing Parcelable interface
         // we are able to store array in Bundle
-        savedInstanceState.putParcelableArray(KEY_QUESTIONS, mQuestionsBank);
+        //savedInstanceState.putParcelableArray(KEY_QUESTIONS, mQuestionsBank);
         savedInstanceState.putInt("CheatsCounter", mCheatCounter);
     }
 
@@ -171,21 +172,23 @@ public class QuizActivity extends AppCompatActivity {
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
-        mQuestionsBank=(Question []) savedInstanceState.getParcelableArray(KEY_QUESTIONS);
+//        mQuestionsBank = (QuestionBank);
+        mQuestionsBank = (QuestionBank.getInstance());
+        savedInstanceState.getParcelableArray(KEY_QUESTIONS);
         mCheatCounter = savedInstanceState.getInt("CheatsCounter");
     }
 
     private void updateQuestion() {
-        int question = mQuestionsBank[mCurrentIndex].getTextResId();
+        int question = mQuestionsBank.getQuestion(mCurrentIndex).getTextResId();
         mQuestionTextView.setText(question);
     }
 
     private void nextQuestion(){
-        if(mCurrentIndex == mQuestionsBank.length-1){
-            mCurrentIndex = mQuestionsBank.length-1;
+        if(mCurrentIndex == mQuestionsBank.size()-1){
+            mCurrentIndex = mQuestionsBank.size()-1;
         }
         else{
-            mCurrentIndex = (mCurrentIndex + 1) % mQuestionsBank.length;
+            mCurrentIndex = (mCurrentIndex + 1) % mQuestionsBank.size();
         }
     }
     private void checkCheatCounter(){
@@ -196,11 +199,11 @@ public class QuizActivity extends AppCompatActivity {
 
     private void checkAnswer(boolean userPressedTrue)
     {
-        Question question = mQuestionsBank[mCurrentIndex];
+        Question question = mQuestionsBank.getQuestion(mCurrentIndex);
         boolean answerIsTrue = question.isAnswerTrue();
 
         int toastMessageId = 0;
-        if (!question.checkIsAnswered() && mAnswered!=mQuestionsBank.length)
+        if (!question.checkIsAnswered() && mAnswered!=mQuestionsBank.size())
         {
             nextQuestion();
             updateQuestion();
@@ -224,10 +227,10 @@ public class QuizActivity extends AppCompatActivity {
         toast.setGravity(Gravity.TOP,0,175);
         toast.show();
 
-        if (mAnswered==mQuestionsBank.length)
+        if (mAnswered==mQuestionsBank.size())
         {
             toastMessageId = R.string.final_notification;
-            String message = getString(toastMessageId)+" "+mCorrectCount+" / "+mQuestionsBank.length;
+            String message = getString(toastMessageId)+" "+mCorrectCount+" / "+mQuestionsBank.size();
             Toast toast1 = Toast.makeText(this, message, Toast.LENGTH_SHORT);
             toast1.setGravity(Gravity.BOTTOM,0,0);
             toast1.show();

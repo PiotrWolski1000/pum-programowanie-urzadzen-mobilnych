@@ -7,27 +7,36 @@ import java.util.List;
  * Created by Piotr on 15.11.2017.
  */
 
-public class QuestionBank {
-    private static final QuestionBank ourInstance = new QuestionBank();
+public class QuestionBank{
+//    private static final QuestionBank ourInstance = new QuestionBank();
 
-    List<String> mQuestionList = new ArrayList<String>();
+    private static QuestionBank ourInstance = null;//konstruktor 1, ladowany przed protected?
 
-    private Question[] mQuestionsBank = new Question[]{
-            new Question(R.string.question_stolica_polski, true),
-            new Question(R.string.question_stolica_dolnego_slaska, false),
-            new Question(R.string.question_sniezka, true),
-            new Question(R.string.question_wisla, true)
-    };
+    private List<Question> mQuestionsBank;
 
-    public static QuestionBank getInstance(int index) {
+    protected QuestionBank() {
+        mQuestionsBank = new ArrayList<>();
+        mQuestionsBank.add(new Question(R.string.question_stolica_polski, true));
+        mQuestionsBank.add(new Question(R.string.question_stolica_dolnego_slaska, false));
+        mQuestionsBank.add(new Question(R.string.question_sniezka, true));
+        mQuestionsBank.add(new Question(R.string.question_wisla, true));
+    }
 
+    public static QuestionBank getInstance() {
+
+        if(ourInstance == null){
+            ourInstance = new QuestionBank();
+        }
         return ourInstance;
     }
 
-    private QuestionBank() {
-        System.out.println("elo!");
+    public Question getQuestion(int index) {//zwraca wybrane pytanie
+        return mQuestionsBank.get(index);
     }
-    public int Size(){
-        return mQuestionList.size();
+    public List<Question> getQuestions(){
+        return mQuestionsBank;
+    }
+    public int size(){//zwraca wielkosc listy(ilosc pytan)
+        return mQuestionsBank.size();
     }
 }
