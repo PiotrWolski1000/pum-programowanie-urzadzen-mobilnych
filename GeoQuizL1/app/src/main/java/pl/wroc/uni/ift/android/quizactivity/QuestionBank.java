@@ -10,11 +10,12 @@ import java.util.List;
 public class QuestionBank{
 //    private static final QuestionBank ourInstance = new QuestionBank();
 
-    private static QuestionBank ourInstance = null;//konstruktor 1, ladowany przed protected?
+    private static QuestionBank ourInstance = null;
+
 
     private List<Question> mQuestionsBank;
 
-    protected QuestionBank() {
+    private QuestionBank() {
         mQuestionsBank = new ArrayList<>();
         mQuestionsBank.add(new Question(R.string.question_stolica_polski, true));
         mQuestionsBank.add(new Question(R.string.question_stolica_dolnego_slaska, false));
@@ -22,7 +23,7 @@ public class QuestionBank{
         mQuestionsBank.add(new Question(R.string.question_wisla, true));
     }
 
-    public static QuestionBank getInstance() {
+    public static QuestionBank getInstance() {//singleton
 
         if(ourInstance == null){
             ourInstance = new QuestionBank();

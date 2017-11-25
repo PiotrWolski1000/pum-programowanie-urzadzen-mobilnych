@@ -27,31 +27,23 @@ public class QuizActivity extends AppCompatActivity {
     private ImageButton mNextButton;
     private ImageButton mPrevButton;
 
+    private Button mQuestionListButton;
+
     private TextView mQuestionTextView;
-
     private Button mCheatButton;
-
-//    private Question[] mQuestionsBank = new Question[]{
-//            new Question(R.string.question_stolica_polski, true),
-//            new Question(R.string.question_stolica_dolnego_slaska, false),
-//            new Question(R.string.question_sniezka, true),
-//            new Question(R.string.question_wisla, true)
-//    };
-
-    private QuestionBank mQuestionsBank =  QuestionBank.getInstance();
+    private QuestionBank mQuestionsBank =  QuestionBank.getInstance();//singleton, w/o new
+//    private QuestionBank asd = new QuestionBank();
 
     private int mCheatCounter = 3;
     private int mCurrentIndex = 0;
     private int mCorrectCount = 0;
     private int mAnswered = 0;
 
-
-
-
     //    Bundles are generally used for passing data between various Android activities.
     //    It depends on you what type of values you want to pass, but bundles can hold all
     //    types of values and pass them to the new activity.
     //    see: https://stackoverflow.com/questions/4999991/what-is-a-bundle-in-an-android-application
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,8 +117,21 @@ public class QuizActivity extends AppCompatActivity {
             }
         });
 
+        mQuestionListButton = (Button) findViewById(R.id.checkQuestions);
+
+        mQuestionListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openQuestionListActivity();//otwiera nasza nowa aktywnosc->questionListActivity
+            }
+        });
         checkCheatCounter();
         updateQuestion();
+    }
+
+    private void openQuestionListActivity() {
+        Intent intent = new Intent(getApplicationContext(), QuestionListActivity.class);
+        startActivity(intent);
     }
 
     @Override

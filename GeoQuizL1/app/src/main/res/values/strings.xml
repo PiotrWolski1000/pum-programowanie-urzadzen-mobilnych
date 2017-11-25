@@ -22,5 +22,7 @@
 
     <string name="already_answered">Already answered</string>
     <string name="final_notification">Punkty: </string>
+    <string name="go_back">Cofnij </string>
+
 
 </resources>
