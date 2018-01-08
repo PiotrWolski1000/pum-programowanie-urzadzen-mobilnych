@@ -22,9 +22,10 @@ public class SummaryActivity extends AppCompatActivity {
 
 
         Bundle extras = getIntent().getExtras();
-//        textView2.setText(extras.getInt("ilosc"));
-//        textView4.setText(extras.getInt("poprawne"));
-//        textView6.setText(extras.getInt("tokens"));
+        assert extras != null;
+        textView2.setText(extras.getInt("ilosc"));
+        textView4.setText(extras.getInt("poprawne"));
+        textView6.setText(extras.getInt("tokens"));
 //        String smmaryData = getIntent().getExtras().getString("smmaryData");
 
     }

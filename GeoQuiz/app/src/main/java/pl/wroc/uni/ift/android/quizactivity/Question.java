@@ -14,6 +14,7 @@ public class Question implements Parcelable {
     private boolean mAnswerTrue;
     private boolean wasCheated;
     private boolean mIsAnswered;
+
     public boolean getWasCheated() {
         return wasCheated;
     }
@@ -28,7 +29,6 @@ public class Question implements Parcelable {
         mAnswerTrue = answerTrue;
         wasCheated = false;
         mIsAnswered = false;
-
     }
 
     //our mIsAnswered getter and setter
@@ -45,6 +45,7 @@ public class Question implements Parcelable {
         mTextResId = in.readInt();
         mAnswerTrue = in.readByte() != 0;
         wasCheated = in.readByte() != 0;
+        mIsAnswered = in.readByte() != 0;//mIsAnswered  too
     }
 
     @Override
@@ -52,6 +53,7 @@ public class Question implements Parcelable {
         dest.writeInt(mTextResId);
         dest.writeByte((byte) (mAnswerTrue ? 1 : 0));
         dest.writeByte((byte) (wasCheated ? 1 : 0));
+        dest.writeByte((byte) (mIsAnswered ? 1 : 0));//mIsAnswered too
     }
 
     @Override
@@ -75,15 +77,8 @@ public class Question implements Parcelable {
         return mTextResId;
     }
 
-    public void setTextResId(int textResId) {
-        mTextResId = textResId;
-    }
-
     public boolean isAnswerTrue() {
         return mAnswerTrue;
     }
 
-    public void setAnswerTrue(boolean answerTrue) {
-        mAnswerTrue = answerTrue;
-    }
-}
+ }

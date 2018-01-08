@@ -1,6 +1,7 @@
 package pl.wroc.uni.ift.android.quizactivity;
 
 import android.content.Intent;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -16,29 +17,26 @@ import android.util.Log;
 import static android.app.Activity.RESULT_OK;
 
 public class QuizFragment extends Fragment {
-
+    // Key for questions array to be stored in bundle;
     private static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
     private static final String KEY_TOKENS = "TokensCount";
-    // Key for questions array to be stored in bundle;
+
     private static final String KEY_QUESTIONS = "questions";
     private static final String QUESTION_ID = "question_id";
 
     private static final int CHEAT_REQEST_CODE = 0;
-
+    //end key for question array
     private int mCheatTokens = 3;
 
     private Button mTrueButton;
     private Button mFalseButton;
-    private ImageButton mNextButton;
-    private ImageButton mPrevButton;
 
     private TextView mQuestionTextView;
     private TextView mAPITextView;
 
     private Button mCheatButton;
     private Button mQuestionListButton;
-
     private int mQuestionId;
 
     private Question[] mQuestionsBank = new Question[]{
@@ -49,9 +47,10 @@ public class QuizFragment extends Fragment {
     };
 
     private int QUESTIONS_COUNT = getQuestionsBankLength();
-    private int correct_answers = getCorrectAnsweredCount();
+    private int correct_answers = 0;
     private int tokens_count = getTokensCount();
-    private int mCurrentIndex = 0;
+    private int mCurrentIndex;
+    public int howManyAnswered = 0;
 
     //    Bundles are generally used for passing data between various Android activities.
     //    It depends on you what type of values you want to pass, but bundles can hold all
@@ -97,14 +96,11 @@ public class QuizFragment extends Fragment {
         View view = inflater.inflate(R.layout.activity_quiz, container, false);
         Log.d(TAG, "onCreate() called");
 
-        //setTitle(R.string.app_name);
-        // inflating view objects
-        //setContentView(R.layout.activity_quiz);
-
         mCheatButton = (Button) view.findViewById(R.id.button_cheat);
         mCheatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
         mCurrentIndex = savedInstanceState.getInt(KEY_INDEX);
 
                 boolean currentAnswer = mQuestionsBank[mCurrentIndex].isAnswerTrue();
@@ -130,7 +126,7 @@ public class QuizFragment extends Fragment {
 
         // set API Level in the textview
         mAPITextView = (TextView) view.findViewById(R.id.textView_API);
-        mAPITextView.setText("API Level: "+Integer.valueOf(android.os.Build.VERSION.SDK_INT).toString());
+        mAPITextView.setText("API Level: "+Integer.valueOf(VERSION.SDK_INT).toString());
 
         mQuestionTextView = (TextView) view.findViewById(R.id.question_text_view);
         mQuestionTextView.setOnClickListener(new View.OnClickListener() {
@@ -147,11 +143,22 @@ public class QuizFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         checkAnswer(true);
+
+                        howManyAnswered+=1;
+
                         mQuestionsBank[mCurrentIndex].setIsAnswered(true);
-                        if(areAllQuestionsAnswered()==true)
+                        boolean val = areAllQuestionsAnswered();
+
+                        if(val)
                         {
                             //start activity
-                            Intent intent = new Intent(getActivity(),SummaryActivity.class);
+                            Intent intent = new Intent(getActivity(), SummaryActivity.class);
+
+
+                            intent.putExtra("ilosc", QUESTIONS_COUNT);
+                            intent.putExtra("poprawne", correct_answers);
+                            intent.putExtra("tokens", tokens_count);
+
                             startActivity(intent);
                         }
 
@@ -165,16 +172,18 @@ public class QuizFragment extends Fragment {
             public void onClick(View v) {
                 checkAnswer(false);
 
+                howManyAnswered+=1;
                 mQuestionsBank[mCurrentIndex].setIsAnswered(true);
 
-                if(areAllQuestionsAnswered()==true)
+                boolean val = areAllQuestionsAnswered();
+                if(val)
                 {
                     //start activity
-                    Intent intent = new Intent(getActivity(),SummaryActivity.class);
+                    Intent intent = new Intent(getActivity(), SummaryActivity.class);//getActivity() //first parameter
 
-//                    intent.putExtra("ilosc", QUESTIONS_COUNT);
-//                    intent.putExtra("poprawne", correct_answers);
-//                    intent.putExtra("tokens", tokens_count);
+                    intent.putExtra("ilosc", QUESTIONS_COUNT);
+                    intent.putExtra("poprawne", correct_answers);
+                    intent.putExtra("tokens", tokens_count);
 
 
                     startActivity(intent);
@@ -182,26 +191,6 @@ public class QuizFragment extends Fragment {
             }
         });
 
-        mNextButton = (ImageButton) view.findViewById(R.id.next_button);
-        mNextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mCurrentIndex = (mCurrentIndex + 1) % mQuestionsBank.length;
-                updateQuestion();
-            }
-        });
-
-        mPrevButton = (ImageButton) view.findViewById(R.id.previous_button);
-        mPrevButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mCurrentIndex == 0)
-                    mCurrentIndex = mQuestionsBank.length - 1;
-                else
-                    mCurrentIndex = (mCurrentIndex - 1);
-                updateQuestion();
-            }
-        });
 
         updateQuestion();
         return view;
@@ -266,7 +255,7 @@ public class QuizFragment extends Fragment {
         int question = mQuestionId;
 
         mQuestionTextView.setText(question);
-        //we have to remember abobut updating mJCurrentIndex of our question
+        //we have to remember about updating mJCurrentIndex of our question
         for (int i =0 ; i < mQuestionsBank.length; i++){
             if (mQuestionsBank[i].getTextResId() == question) mCurrentIndex = i;
         }
@@ -280,6 +269,7 @@ public class QuizFragment extends Fragment {
 
         if (userPressedTrue == answerIsTrue) {
             toastMessageId = R.string.correct_toast;
+            correct_answers += 1;
 
         } else {
             toastMessageId = R.string.incorrect_toast;
@@ -292,29 +282,32 @@ public class QuizFragment extends Fragment {
     //function below checks if all of our question in our quiz- game is answered, so we can start acitivity which shows
     //us result of our game e.g; how many points did we get, how many life savers do we still have(if any) etc.
     public Boolean areAllQuestionsAnswered(){
+        //just because we can do it here, we check here how many answers arer correct
+//        correct_answers = getCorrectAnsweredCount();
+        if(howManyAnswered == QUESTIONS_COUNT)
+            return true;
+        else
+            return false;
+        /*
         for(int i = 0;i<= mQuestionsBank.length-1;i++){
-            if(mQuestionsBank[i].getIsAnswered() == false) {
-                return false;//return false when there is at least one not answered question
-            }else
-                if(i == mQuestionsBank.length-1)
-                    return true;//return true when all questions was already answered
-            }
-        return null;
-    }
 
-    public int getCorrectAnsweredCount(){
-        int ilosc = 0;
-        for(int i = 0;i <= mQuestionsBank.length-1;i++){
-            if(mQuestionsBank[i].isAnswerTrue() == true)
-            ilosc += 1;
+            if(!mQuestionsBank[i].getIsAnswered()) {
+                return false;//return false when there is at least one not answered question
+            }
+
+            if(mQuestionsBank[i].getIsAnswered())
+                if(i == mQuestionsBank.length-1)
+                    return true;//return true when all questions was already answered, because if there was false in earlier element of
+            //our array, we would never get in here
         }
-        return ilosc;
+        return false;//just in case, and bc of adroid-studio told me to do it, (in case list is empty?)
+        */
     }
 
     public int getTokensCount() {
         int ilosc = 0;
-        for(int i = 0;i <= mQuestionsBank.length-1;i++){
-            if(mQuestionsBank[i].getWasCheated() == true)
+        for(int i = 0; i <= (mQuestionsBank.length - 1); i++){
+            if(mQuestionsBank[i].getWasCheated())
                 ilosc += 1;
         }
         return ilosc;

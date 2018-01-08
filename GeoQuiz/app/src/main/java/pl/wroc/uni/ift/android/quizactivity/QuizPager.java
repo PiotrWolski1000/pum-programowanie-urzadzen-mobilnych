@@ -21,7 +21,8 @@ public class QuizPager extends FragmentActivity {
 
     public static Intent newIntent(Context packageContext, int index) {
         Intent intent = new Intent(packageContext,QuizPager.class);
-        intent.putExtra(EXTRA_CURRENT_ID,index);
+
+        intent.putExtra(EXTRA_CURRENT_ID, index);
         return intent;
     }
 
@@ -48,6 +49,6 @@ public class QuizPager extends FragmentActivity {
             }
         });
         mIndex = getIntent().getIntExtra("currentQuestion",0);
-        mViewPager.setCurrentItem(mIndex);
+        mViewPager.setCurrentItem(mIndex);//here we have view from actual displayed item in quizfragment activity
     }
 }
