@@ -2,6 +2,8 @@ package com.example.piotr.mygeoapp;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +12,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -19,8 +25,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by piotr on 21.01.18.
@@ -34,6 +45,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
+    //widgets
+    private EditText mSearchText;
 
 
     //vars
@@ -45,10 +58,48 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
+        mSearchText = (EditText) findViewById(R.id.input_search);
         getLocationPermission();
+
     }
 
+    private void init(){
+        Log.d(TAG, "init: initializing");
+        mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if(actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE || keyEvent.getAction() == KeyEvent.ACTION_DOWN ||
+                        keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
+                    //execute our method for sarching
+                    geoLocate();
+                }
+                return false;
+            }
+        });
+    }
+
+    private void geoLocate() {
+        Log.d(TAG, "geoLocate: goelocating in progress. ");
+        String searchString = mSearchText.getText().toString();
+
+        Geocoder geocoder = new Geocoder(MapActivity.this);
+        List<Address> list = new ArrayList<>();
+
+        try {
+            list = geocoder.getFromLocationName(searchString, 1);
+
+
+        } catch (IOException e) {
+            Log.e(TAG, "geoLocate: IOException: " + e.getMessage());
+        }
+
+        if (list.size() > 0) {
+            Address address = list.get(0);
+            Log.d(TAG, "geLocate: found a location: " + address.toString());
+            //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
+            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
+        }
+    }
     private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting the device current location. ");
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -64,7 +115,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                             Log.d(TAG, "moveCamer: started to move camera.");
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                    DEFAULT_ZOOM);
+                                    DEFAULT_ZOOM,
+                                    "My location");
 
                         } else {
                             Log.d(TAG, "onComplete: current  location is null");
@@ -79,9 +131,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
 
-    private void moveCamera(LatLng latLng, float zoom) {
+    private void moveCamera(LatLng latLng, float zoom, String title) {
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+
+        MarkerOptions options = new MarkerOptions().position(latLng).title(title);
+
+        mMap.addMarker(options);
     }
 
 
@@ -159,7 +215,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 return;
             }
             mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
+            mMap.getUiSettings().setCompassEnabled(true);
+
+            init();
         }
     }
 }
