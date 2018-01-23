@@ -138,9 +138,55 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         MarkerOptions options = new MarkerOptions().position(latLng).title(title);
 
         mMap.addMarker(options);
+
+//        addMarkers();
+        countCircuit();
     }
 
+    private void addMarkers() {
 
+        LatLng wfia_position = new LatLng(51.117418, 17.028085);
+        LatLng dom_position = new LatLng(51.119704, 17.028613);
+
+
+        MarkerOptions options = new MarkerOptions().position(new LatLng(51.117418, 17.028085)).title("WFiA");
+        MarkerOptions options2 = new MarkerOptions().position(new LatLng(51.119704, 17.028613)).title("dom");
+
+        if(mMap != null) {
+            mMap.addMarker(options);
+            mMap.addMarker(options2);
+
+            Location wfia = new Location("");
+            wfia.setLatitude(wfia_position.latitude);
+            wfia.setLongitude(wfia_position.longitude);
+
+            Location dom = new Location("");
+            dom.setLatitude(dom_position.latitude);
+            dom.setLongitude(dom_position.longitude);
+
+            float distance = wfia.distanceTo(dom)/ 1000; //convert from meters to kilometers
+            Toast.makeText(this, Float.toString(distance), Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    private void countCircuit() {
+        LatLng p1 = new LatLng(0, 0);
+        LatLng p2 = new LatLng(1, 0);
+
+        Location wfia = new Location("");
+        wfia.setLatitude(p1.latitude);
+        wfia.setLongitude(p1.longitude);
+
+        Location dom = new Location("");
+        dom.setLatitude(p2.latitude);
+        dom.setLongitude(p2.longitude);
+
+        //distance of 1 degree distance "gap" between 2 points
+        float distance = (wfia.distanceTo(dom)/ 1000) * 360 ;//kilometers
+
+        Toast.makeText(this, "earth circuit: circuit is equal to " + Float.toString(distance)+ " kilometers.", Toast.LENGTH_LONG).show();
+    }
     private void initMap() {
         Log.d(TAG, "initMap: initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
