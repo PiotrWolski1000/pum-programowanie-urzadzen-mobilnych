@@ -1,4 +1,4 @@
-package com.example.piotr.mygeoapp;
+package com.example.piotr.googlemapsdrawroute;
 
 import org.junit.Test;
 

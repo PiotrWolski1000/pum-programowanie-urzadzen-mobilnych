@@ -1,4 +1,4 @@
-package com.example.piotr.mygeoapp;
+package com.example.piotr.googlemapsdrawroute;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.piotr.mygeoapp", appContext.getPackageName());
+        assertEquals("com.example.piotr.googlemapsdrawroute", appContext.getPackageName());
     }
 }
